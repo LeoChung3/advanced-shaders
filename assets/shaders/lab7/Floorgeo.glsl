@@ -1,0 +1,45 @@
+#version 460 core
+
+layout(triangles) in;
+layout(triangle_strip, max_vertices = 3) out;
+
+
+in vec3 tes_fragmentPos[];
+//in vec3 tcs_normal[];
+in vec2 tes_texCoord[];
+//in vec4 vs_fragmentPosLightSpace;
+
+uniform sampler2D normalmap;
+
+out vec3 fragmentPos;
+out vec3 vertexNormal;
+out vec2 texCoord;
+//out vec4 fragmentPosLightSpace;
+
+vec3 getNormal();
+
+void main()
+{
+	for (int i = 0; i < 3; i++)
+	{
+		//fragmentPosLightSpace = vs_fragmentPosLightSpace;
+		texCoord = tes_texCoord[i];
+		fragmentPos = tes_fragmentPos[i];
+		//vertexNormal = vs_normal[i];
+		vertexNormal = texture(normalmap, tes_texCoord[i]).rgb;
+		//vertexNormal = vec3(0,1,0);
+
+		gl_Position = gl_in[i].gl_Position;
+		EmitVertex();
+
+	}
+	EndPrimitive();
+
+}
+
+vec3 getNormal()
+{
+	vec3 a = tes_fragmentPos[0] - tes_fragmentPos[1];
+	vec3 b = tes_fragmentPos[0] - tes_fragmentPos[2];
+	return normalize(cross(a,b));
+}
