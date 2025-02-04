@@ -680,93 +680,103 @@ void FinalLayer::onImGUIRender()
 	ImVec2 uv0 = ImVec2(0.0f, 1.0f);
 	ImVec2 uv1 = ImVec2(1.0f, 0.0f);
 
-
-	if (ImGui::BeginTabBar("Tabs"))
+	if (ImGui::CollapsingHeader("part1", true))
 	{
-		if (ImGui::BeginTabItem("point lights"))
+		if (ImGui::BeginTabBar("Tabs"))
 		{
-			ImGui::SliderInt("point lights on/off", &pointLightOn, 0, 1); // turns pointlights on/off
-			ImGui::SliderFloat("point light ambient", &ambientStrength, 0, 0.5); //changes ambient of point lights
-			ImGui::EndTabItem();
-
-		}
-
-		if (ImGui::BeginTabItem("lighting/shadow mapping"))
-		{
-			ImGui::SliderFloat3("light direction", (float*)&lightDirection, -0.5f, 0.0f); // changes light direction
-			textureID = m_mainRenderer.getDepthPass(0).target->getTarget(0)->getID(); // shadow map visualised
-			ImGui::Image((void*)(intptr_t)textureID, imageSize, uv0, uv1);
-			ImGui::EndTabItem();
-
-		}
-
-		if (ImGui::BeginTabItem("deferred rendering"))
-		{
-			//deferred rending colour attachements shown on gui
-			textureID = m_mainRenderer.getRenderPass(0).target->getTarget(0)->getID();
-			ImGui::Image((void*)(intptr_t)textureID, imageSize, uv0, uv1);
-			ImGui::SameLine();
-			textureID = m_mainRenderer.getRenderPass(0).target->getTarget(1)->getID();
-			ImGui::Image((void*)(intptr_t)textureID, imageSize, uv0, uv1);
-
-			textureID = m_mainRenderer.getRenderPass(0).target->getTarget(2)->getID();
-			ImGui::Image((void*)(intptr_t)textureID, imageSize, uv0, uv1);
-			ImGui::SameLine();
-
-			textureID = m_mainRenderer.getRenderPass(2).target->getTarget(0)->getID();
-			ImGui::Image((void*)(intptr_t)textureID, imageSize, uv0, uv1);
-			ImGui::EndTabItem();
-		}
-
-		if (ImGui::BeginTabItem("floor/tesselation"))
-		{
-			ImGui::SliderFloat("tesselelation level", &TessLevel, 1.0f, 60.0f); // changes tesselation level of floor
-			ImGui::SliderFloat("map scale", &mapscale, 1.0f, 50.0f); // changes the scale of the floor
-			ImGui::EndTabItem();
-		}
-
-		if (ImGui::BeginTabItem("Noise"))
-		{
-			
-			if (ImGui::Combo("normal types", &Selecteditem, items, IM_ARRAYSIZE(items))) // changes the normal types of the floor to and from CDM normals
+			if (ImGui::BeginTabItem("point lights"))
 			{
-				if (Selecteditem == 0)
-				{
-					normalType = 0;
-				}
-				if (Selecteditem == 1)
-				{
-					normalType = 1;
-				}
+				ImGui::SliderInt("point lights on/off", &pointLightOn, 0, 1); // turns pointlights on/off
+				ImGui::SliderFloat("point light ambient", &ambientStrength, 0, 0.5); //changes ambient of point lights
+				ImGui::EndTabItem();
+
 			}
-			
-			ImGui::SliderInt("octaves", &octaves, 1, 8); // changes octovates of noise map
-			ImGui::SliderFloat("frequency", &frequency, 10.0f, 20.0f);  // changes frequency
-			ImGui::SliderFloat("amplitude", &amplitude, 0.0f, 10.f); //changes amplitude
-			ImGui::SliderFloat("persistence", &persistence, 0.5f, 5.0f); //changes persistence
-			ImGui::SliderFloat("lacunartiy", &lacunartiy, 2.0, 5.0f); // changes lacunarity
 
-			textureID = m_noiseRenderer.getComputePass(0).images[0].texture->getID();
-			ImGui::Image((void*)(intptr_t)textureID, imageSize, uv0, uv1);
-			ImGui::SameLine();
-			textureID = m_mainRenderer.getComputePass(0).images[0].texture->getID();
-			ImGui::Image((void*)(intptr_t)textureID, imageSize, uv0, uv1);
+			if (ImGui::BeginTabItem("lighting/shadow mapping"))
+			{
+				ImGui::SliderFloat3("light direction", (float*)&lightDirection, -0.5f, 0.0f); // changes light direction
+				textureID = m_mainRenderer.getDepthPass(0).target->getTarget(0)->getID(); // shadow map visualised
+				ImGui::Image((void*)(intptr_t)textureID, imageSize, uv0, uv1);
+				ImGui::EndTabItem();
 
-			ImGui::EndTabItem();
+			}
+
+			if (ImGui::BeginTabItem("deferred rendering"))
+			{
+				//deferred rending colour attachements shown on gui
+				textureID = m_mainRenderer.getRenderPass(0).target->getTarget(0)->getID();
+				ImGui::Image((void*)(intptr_t)textureID, imageSize, uv0, uv1);
+				ImGui::SameLine();
+				textureID = m_mainRenderer.getRenderPass(0).target->getTarget(1)->getID();
+				ImGui::Image((void*)(intptr_t)textureID, imageSize, uv0, uv1);
+
+				textureID = m_mainRenderer.getRenderPass(0).target->getTarget(2)->getID();
+				ImGui::Image((void*)(intptr_t)textureID, imageSize, uv0, uv1);
+				ImGui::SameLine();
+
+				textureID = m_mainRenderer.getRenderPass(2).target->getTarget(0)->getID();
+				ImGui::Image((void*)(intptr_t)textureID, imageSize, uv0, uv1);
+				ImGui::EndTabItem();
+			}
+			ImGui::EndTabBar();
+
 		}
+	}
+	if (ImGui::CollapsingHeader("part2", true))
+	{
 
-
-		if (ImGui::BeginTabItem("PBR"))
+		if (ImGui::BeginTabBar("Tabs"))
 		{
-			ImGui::SliderFloat("metalic", &metalic, 0, 1); //changes the metalic variable of PBR
-			ImGui::SliderFloat("rougness", &roughnouss, 0, 1); // changes roughness of PBR
-			ImGui::EndTabItem();
+			if (ImGui::BeginTabItem("floor/tesselation"))
+			{
+				ImGui::SliderFloat("tesselelation level", &TessLevel, 1.0f, 60.0f); // changes tesselation level of floor
+				ImGui::SliderFloat("map scale", &mapscale, 1.0f, 50.0f); // changes the scale of the floor
+				ImGui::EndTabItem();
+			}
 
+			if (ImGui::BeginTabItem("Noise"))
+			{
+
+				if (ImGui::Combo("normal types", &Selecteditem, items, IM_ARRAYSIZE(items))) // changes the normal types of the floor to and from CDM normals
+				{
+					if (Selecteditem == 0)
+					{
+						normalType = 0;
+					}
+					if (Selecteditem == 1)
+					{
+						normalType = 1;
+					}
+				}
+
+				ImGui::SliderInt("octaves", &octaves, 1, 8); // changes octovates of noise map
+				ImGui::SliderFloat("frequency", &frequency, 10.0f, 20.0f);  // changes frequency
+				ImGui::SliderFloat("amplitude", &amplitude, 0.0f, 10.f); //changes amplitude
+				ImGui::SliderFloat("persistence", &persistence, 0.5f, 5.0f); //changes persistence
+				ImGui::SliderFloat("lacunartiy", &lacunartiy, 2.0, 5.0f); // changes lacunarity
+
+				textureID = m_noiseRenderer.getComputePass(0).images[0].texture->getID();
+				ImGui::Image((void*)(intptr_t)textureID, imageSize, uv0, uv1);
+				ImGui::SameLine();
+				textureID = m_mainRenderer.getComputePass(0).images[0].texture->getID();
+				ImGui::Image((void*)(intptr_t)textureID, imageSize, uv0, uv1);
+
+				ImGui::EndTabItem();
+			}
+
+
+			if (ImGui::BeginTabItem("PBR"))
+			{
+				ImGui::SliderFloat("metalic", &metalic, 0, 1); //changes the metalic variable of PBR
+				ImGui::SliderFloat("rougness", &roughnouss, 0, 1); // changes roughness of PBR
+				ImGui::EndTabItem();
+
+			}
+			ImGui::EndTabBar();
 		}
-		ImGui::EndTabBar();
 	}
 
-
+	
 	ImGui::End();
 	ImGui::Render();
 }
